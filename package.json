@@ -1,0 +1,9 @@
+{
+  "name": "game-1-xiangqi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "局域网双人中国象棋",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

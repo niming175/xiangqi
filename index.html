@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4efe5">
+  <title>楚汉棋局 · 中国象棋</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="online.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="楚汉棋局首页">
+        <span class="brand-mark" aria-hidden="true">棋</span>
+        <span><strong>楚汉棋局</strong><small>CHINESE CHESS</small></span>
+      </a>
+      <div class="topbar-note"><span class="live-dot"></span> 本地双人对弈 <span class="note-divider">·</span> 无需联网</div>
+    </header>
+
+    <section class="game-layout" aria-label="中国象棋游戏">
+      <section class="play-column">
+        <div class="game-heading">
+          <div>
+            <p class="eyebrow">CLASSIC STRATEGY</p>
+            <h1>中国象棋</h1>
+            <p class="subtitle">楚河汉界，落子见真章。</p>
+          </div>
+          <div class="heading-actions">
+            <span class="round-tag"><span class="round-icon">♟</span> 标准对局</span>
+            <button class="online-button" id="online-button" type="button"><span aria-hidden="true">⇄</span> 在线对战</button>
+          </div>
+        </div>
+
+        <div class="board-card">
+          <div class="player-strip player-top" id="black-player">
+            <div class="player-avatar black-avatar">将</div>
+            <div class="player-meta"><strong>黑方</strong><span>后行</span></div>
+            <span class="turn-indicator" aria-hidden="true"></span>
+            <span class="player-status" id="black-status">等待行棋</span>
+          </div>
+
+          <div class="board-wrap">
+            <div class="rank-labels" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+            <div class="file-labels" aria-hidden="true"><span>Ａ</span><span>Ｂ</span><span>Ｃ</span><span>Ｄ</span><span>Ｅ</span><span>Ｆ</span><span>Ｇ</span><span>Ｈ</span><span>Ｉ</span></div>
+            <div class="board" id="board" role="grid" aria-label="象棋棋盘" tabindex="0">
+              <svg class="board-art" viewBox="0 0 800 900" preserveAspectRatio="none" aria-hidden="true">
+                <g class="board-lines">
+                  <rect x="44" y="45" width="712" height="810" />
+                  <path d="M133 45V405 M133 495V855 M222 45V405 M222 495V855 M311 45V405 M311 495V855 M400 45V405 M400 495V855 M489 45V405 M489 495V855 M578 45V405 M578 495V855 M667 45V405 M667 495V855" />
+                  <path d="M44 135H756 M44 225H756 M44 315H756 M44 405H756 M44 495H756 M44 585H756 M44 675H756 M44 765H756" />
+                  <path d="M311 45L489 225 M489 45L311 225 M311 675L489 855 M489 675L311 855" />
+                </g>
+                <text class="river-text" x="245" y="459">楚 河</text>
+                <text class="river-text" x="555" y="459">汉 界</text>
+              </svg>
+              <div class="squares" id="squares"></div>
+              <div class="pieces" id="pieces"></div>
+            </div>
+          </div>
+
+          <div class="player-strip player-bottom" id="red-player">
+            <div class="player-avatar red-avatar">帥</div>
+            <div class="player-meta"><strong>红方</strong><span>先行</span></div>
+            <span class="turn-indicator" aria-hidden="true"></span>
+            <span class="player-status" id="red-status">轮到红方</span>
+          </div>
+        </div>
+        <div class="board-caption"><span>按住棋子拖到高亮位置松手；也可点击选择后再点落点</span><span class="caption-key">红方先行</span></div>
+        <div class="game-timer" id="game-timer" hidden aria-live="off">
+          <span class="timer-indicator" aria-hidden="true"></span>
+          <span class="timer-label">本局计时</span>
+          <strong id="timer-value">00:00</strong>
+          <span class="timer-state" id="timer-state">对局进行中</span>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <section class="panel-card status-card" aria-live="polite">
+          <div class="panel-label">当前对局</div>
+          <div class="turn-title"><span id="turn-stone" class="turn-stone red-stone">帅</span><div><span class="turn-caption">现在轮到</span><strong id="turn-title">红方行棋</strong></div></div>
+          <div class="status-message" id="status-message">请选择一枚红方棋子开始。</div>
+          <div class="check-banner" id="check-banner" hidden>将军！</div>
+          <div class="action-buttons">
+            <button class="button button-primary" id="undo-button" type="button" disabled><span aria-hidden="true">↶</span> 悔棋</button>
+            <button class="button button-quiet" id="restart-button" type="button"><span aria-hidden="true">＋</span> 重新开始</button>
+            <button class="button button-quiet exit-game-button" id="exit-game-button" type="button" hidden>退出游戏</button>
+          </div>
+        </section>
+
+        <section class="panel-card moves-card">
+          <div class="section-heading"><div><div class="panel-label">棋谱记录</div><h2>行棋记录</h2></div><span class="move-count" id="move-count">0 手</span></div>
+          <div class="move-list" id="move-list"><div class="empty-moves"><span>♧</span><p>棋局尚未开始</p><small>每一步都会记录在这里</small></div></div>
+        </section>
+
+        <section class="tip-card">
+          <div class="tip-icon" aria-hidden="true">i</div>
+          <div><strong>行棋小提示</strong><p>马走日，象走田；炮打隔子，兵过河后可横行。将帅不能照面。</p></div>
+        </section>
+        <footer class="side-footer">一盘好棋，从容落子。<span>♟</span></footer>
+      </aside>
+    </section>
+    <div class="online-overlay" id="online-overlay" hidden>
+      <section class="online-dialog" role="dialog" aria-modal="true" aria-labelledby="online-dialog-title">
+        <button class="dialog-close" id="close-online-dialog" type="button" aria-label="关闭">×</button>
+        <p class="eyebrow">LOCAL NETWORK PLAY</p>
+        <h2 id="online-dialog-title">局域网对战</h2>
+        <p class="dialog-intro">创建房间并分享房间码或邀请链接，或输入对方的房间码加入。</p>
+        <div class="online-actions" id="online-actions">
+          <button class="button button-primary create-room-button" id="create-room-button" type="button">创建房间</button>
+          <button class="button button-quiet open-join-button" id="open-join-button" type="button">加入已有房间</button>
+        </div>
+        <div class="join-room-panel" id="join-room-panel" hidden>
+          <label for="room-code-input">输入对方分享的 6 位房间码</label>
+          <div class="join-row">
+            <input id="room-code-input" type="text" maxlength="6" inputmode="text" autocomplete="off" placeholder="例如：A2BC7D" aria-label="房间码">
+            <button class="button button-primary" id="join-room-button" type="button">加入房间</button>
+          </div>
+          <button class="back-to-online-menu" id="back-to-online-menu" type="button">← 返回</button>
+        </div>
+        <div class="active-room" id="active-room" hidden>
+          <strong class="room-result-title" id="room-result-title">房间已创建</strong>
+          <span class="room-role" id="room-role">你是红方 · 先行</span>
+          <span class="room-label">房间码</span>
+          <div class="room-code-line"><strong id="room-code-display">——</strong><button id="copy-room-code" type="button">复制房间码</button></div>
+          <div class="room-link-line" id="room-link-line"><input id="room-link-display" type="text" readonly aria-label="邀请链接"><button id="copy-room-link" type="button">复制链接</button></div>
+          <p id="room-status-text">正在等待对手加入。</p>
+          <button class="leave-room-button" id="leave-room-button" type="button">退出游戏</button>
+        </div>
+        <p class="online-error" id="online-error" role="status" aria-live="polite"></p>
+        <p class="dialog-footnote">房间只保存在运行中的本地服务里，服务重启后会清除。</p>
+      </section>
+    </div>
+    <div class="game-start-overlay" id="game-start-overlay" hidden aria-live="assertive" aria-atomic="true">
+      <div class="start-burst" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="start-copy"><span>CHU · HAN</span><strong>游戏开始</strong><small>红方先行 · 楚河汉界</small></div>
+    </div>
+    <div class="exit-countdown-overlay" id="exit-countdown-overlay" hidden aria-live="assertive">
+      <div class="exit-countdown-card">
+        <span class="countdown-kicker">对局暂停</span>
+        <strong class="exit-countdown-value" id="exit-countdown-value">30</strong>
+        <p class="exit-countdown-message" id="exit-countdown-message">对方已经退出</p>
+        <small>秒后本局结束并返回初始界面</small>
+        <div class="countdown-actions">
+          <button class="button button-primary" id="reenter-game-button" type="button">再次进入</button>
+          <button class="button button-quiet" id="leave-game-button" type="button">离开</button>
+        </div>
+      </div>
+    </div>
+    <footer class="mobile-footer">本地棋局仅保存在当前页面 · 在线房间由局域网服务暂存</footer>
+  </main>
+  <script src="rules.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
